@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyAttendance-App"
+rootProject.name = "GFAttendance"
 include(":app")
+ 

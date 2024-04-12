@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myattendance_app"
+    namespace = "com.example.gfattendance"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myattendance_app"
+        applicationId = "com.example.gfattendance"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

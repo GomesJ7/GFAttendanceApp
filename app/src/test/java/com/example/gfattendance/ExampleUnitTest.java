@@ -1,4 +1,4 @@
-package com.example.myattendance_app;
+package com.example.gfattendance;
 
 import org.junit.Test;
 
