@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey">#FFC1B9B9</color>
+    <color name="orangeGEFOR">#FFE85120</color>
+    <color name="bleuGEFOR">#FF373275</color>
+    <color name="bleuBandeau">#FF132734</color>
+</resources>
