@@ -21,7 +21,7 @@
         tools:ignore="MissingConstraints">
 
         <Button
-            android:id="@+id/PageConnexion"
+            android:id="@+id/open_LoginPage"
             android:layout_width="192dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="110dp"

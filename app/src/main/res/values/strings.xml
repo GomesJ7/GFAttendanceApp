@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">GFAttendance</string>
     <string name="se_connecter">SE CONNECTER</string>
+    <string name="envoyer">ENVOYER</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="forget_password">Mot de passe oublié?</string>
 </resources>
