@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".LoginManager"/>
         <activity android:name=".PasswordRecoveryManager"/>
+        <activity android:name=".HomeManager"/>
     </application>
 
 </manifest>

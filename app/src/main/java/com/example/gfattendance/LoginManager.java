@@ -11,20 +11,31 @@ import java.io.InputStream;
 public class LoginManager {
     private Context context;
 
+    // Constructeur pour initialiser le contexte
     public LoginManager(Context context) {
         this.context = context;
     }
 
-    // Méthode pour valider les informations de connexion
+    /**
+     * Méthode pour valider les informations de connexion
+     *
+     * @param email    L'email entré par l'utilisateur
+     * @param password Le mot de passe entré par l'utilisateur
+     * @return true si les informations de connexion sont valides, false sinon
+     */
     public boolean validateLogin(String email, String password) {
         try {
             // Lire le fichier JSON depuis le dossier assets
             AssetManager assetManager = context.getAssets();
-            InputStream inputStream = assetManager.open("user.json");
+            InputStream inputStream = assetManager.open("users.json");
+
+            // Lire le contenu du fichier dans un buffer
             int size = inputStream.available();
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
             inputStream.close();
+
+            // Convertir le buffer en chaîne de caractères
             String json = new String(buffer, "UTF-8");
 
             // Analyser les données JSON
