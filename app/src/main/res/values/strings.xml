@@ -5,4 +5,10 @@
     <string name="email">Email</string>
     <string name="password">Mot de passe</string>
     <string name="forget_password">Mot de passe oublié?</string>
+    <string name="new_user">Nouvel utilisateur</string>
+    <string name="commencer_le_cours">Commencer le cours</string>
+    <string name="jeudi_23_janvier">Jeudi 23 janvier</string>
+    <string name="entrer_en_cours">ENTRER EN COURS</string>
+    <string name="_05_35">05:35</string>
+
 </resources>

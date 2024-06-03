@@ -1,25 +1,73 @@
 package com.example.gf_attendance;
+import android.content.Context;
+import android.widget.Toast;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.Button;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import androidx.appcompat.app.AppCompatActivity;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity {
+    private Context context;
+    private JSONObject userData;
 
-    Button btn_open;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.launch_screen);
-
-        btn_open = findViewById(R.id.open_LoginPage);
-
-        btn_open.setOnClickListener(v -> {
-            Intent intent =new Intent(MainActivity.this, MainActivity2.class);
-            startActivity(intent);
-
-        });
+    public MainActivity(Context context) {
+        this.context = context;
+        loadUserData();
     }
+
+    private void loadUserData() {
+        try {
+            InputStream inputStream = context.getAssets().open("login info.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            String json = new String(buffer, "UTF-8");
+            userData = new JSONObject(json);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recoverPassword(String email) {
+        try {
+            if (userData != null) {
+                JSONArray usersArray = userData.getJSONArray("users");
+                for (int i = 0; i < usersArray.length(); i++) {
+                    JSONObject user = usersArray.getJSONObject(i);
+                    if (email.equals(user.getString("email"))) {
+                        // Send password recovery email or perform necessary actions
+                        Toast.makeText(context, "Password recovery email sent to " + email, Toast.LENGTH_SHORT).show();
+                        //
+                        return;
+                    }
+                }
+                // If email not found in the JSON data
+                Toast.makeText(context, "Email not registered", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private String NouveauMotDePasse(){
+        return "NewPassword";
+        }
+
+    private void EnregistrementDesDonnées() {
+        try {
+            File file = new File(context.getExternalFilesDir(null), "login info.json");
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(userData.toString().getBytes(StandardCharsets.UTF_8));
+            fos.close();
+            Toast.makeText(context, " Mises à jour du login et password", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+    }
+}
 }
