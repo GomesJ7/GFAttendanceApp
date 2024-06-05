@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Initialisation des gestionnaires de connexion et de récupération de mot de passe
         loginManager = new LoginManager(this);
-        passwordRecoveryManager = new PasswordRecoveryManager(this);
 
         // Ajout des écouteurs d'événements aux boutons
         buttonLogin.setOnClickListener(this);
@@ -75,15 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         } else if (v == buttonForgotPassword) {
-            // Récupération de l'email entré par l'utilisateur
-            String email = editTextEmail.getText().toString().trim();
-            if (!email.isEmpty()) {
-                // Appel de la méthode de récupération de mot de passe si l'email n'est pas vide
-                passwordRecoveryManager.recoverPassword(email);
-            } else {
-                // Affichage d'un message d'erreur si l'utilisateur n'a pas saisi d'email
-                Toast.makeText(this, "Please enter your email to recover password", Toast.LENGTH_SHORT).show();
-            }
+            Intent intent = new Intent(this, PasswordRecoveryManager.class);
+            startActivity(intent);
         }
     }
 }
