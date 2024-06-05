@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -156,6 +155,7 @@
                 android:scrollbars="vertical" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="360dp"
             android:layout_height="30dp"
@@ -166,6 +166,7 @@
 
             <Button
                 android:id="@+id/envoyer"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
@@ -180,11 +181,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="MissingConstraints,TextSizeCheck"
-                style="?android:attr/buttonBarButtonStyle" />
+                tools:ignore="MissingConstraints,TextSizeCheck" />
 
             <Button
                 android:id="@+id/modifier"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="124dp"
@@ -199,9 +200,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="HardcodedText,MissingConstraints,TextSizeCheck"
-                style="?android:attr/buttonBarButtonStyle" />
+                tools:ignore="HardcodedText,MissingConstraints,TextSizeCheck" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/TextDate7"
             android:layout_width="60dp"

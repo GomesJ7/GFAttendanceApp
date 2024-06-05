@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper6prof"
     tools:context=".MainActivity">
+
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:id="@+id/linearLayout3"
+        android:layout_width="414dp"
+        android:layout_height="736dp"
+        android:background="@drawable/wallpaper6prof"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView"
@@ -32,7 +35,7 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="290dp"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/_03_06"
             android:textColor="@color/white"
@@ -44,7 +47,7 @@
             android:layout_width="320dp"
             android:layout_height="20dp"
             android:layout_marginStart="48dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="0dp"
             android:orientation="horizontal"
             tools:ignore="TextSizeCheck">
 
@@ -193,13 +196,13 @@
             android:id="@+id/button"
             android:layout_width="292dp"
             android:layout_height="40dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginStart="63dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginTop="4dp"
             android:background="@drawable/button_validation"
+            android:gravity="center"
             android:text="COMMENCER LE COURS"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:gravity="center"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
@@ -224,7 +227,7 @@
             android:layout_width="64dp"
             android:layout_height="30dp"
             android:layout_marginStart="79dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:gravity="center"
             android:minHeight="48dp"
             android:text="@string/_05_35"

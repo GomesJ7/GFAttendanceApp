@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper7prof"
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:id="@+id/linearLayout4"
+        android:layout_width="414dp"
+        android:layout_height="736dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@drawable/wallpaper7prof"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView"
@@ -194,13 +198,13 @@
             android:id="@+id/button"
             android:layout_width="292dp"
             android:layout_height="40dp"
-            android:layout_marginTop="2dp"
             android:layout_marginStart="63dp"
+            android:layout_marginTop="2dp"
             android:background="@drawable/button_validation"
+            android:gravity="center"
             android:text="COMMENCER LE COURS"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:gravity="center"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
