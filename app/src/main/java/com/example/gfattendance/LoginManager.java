@@ -1,19 +1,28 @@
 package com.example.gfattendance;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.IOException;
-import java.io.InputStream;
+import android.widget.Toast;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginManager {
     private Context context;
+    private ApiService apiService;
 
-    // Constructeur pour initialiser le contexte
+    // Constructeur pour initialiser le contexte et Retrofit
     public LoginManager(Context context) {
         this.context = context;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://127.0.0.1:8000/api")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apiService = retrofit.create(ApiService.class);
     }
 
     /**
@@ -21,42 +30,34 @@ public class LoginManager {
      *
      * @param email    L'email entré par l'utilisateur
      * @param password Le mot de passe entré par l'utilisateur
-     * @return true si les informations de connexion sont valides, false sinon
      */
-    public boolean validateLogin(String email, String password) {
-        try {
-            // Lire le fichier JSON depuis le dossier assets
-            AssetManager assetManager = context.getAssets();
-            InputStream inputStream = assetManager.open("users.json");
+    public void validateLogin(String email, String password, LoginCallback callback) {
+        LoginRequest loginRequest = new LoginRequest(email, password);
+        Call<LoginResponse> call = apiService.login(loginRequest);
 
-            // Lire le contenu du fichier dans un buffer
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-
-            // Convertir le buffer en chaîne de caractères
-            String json = new String(buffer, "UTF-8");
-
-            // Analyser les données JSON
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray usersArray = jsonObject.getJSONArray("users");
-
-            // Rechercher la combinaison email/mot de passe
-            for (int i = 0; i < usersArray.length(); i++) {
-                JSONObject userObject = usersArray.getJSONObject(i);
-                String storedEmail = userObject.getString("email");
-                String storedPassword = userObject.getString("password");
-
-                // Vérifier si les informations de connexion sont valides
-                if (email.equals(storedEmail) && password.equals(storedPassword)) {
-                    return true; // Informations de connexion valides trouvées
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Connexion réussie
+                    callback.onSuccess(response.body().getToken());
+                } else {
+                    // Connexion échouée
+                    callback.onError("Invalid email or password");
                 }
             }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
 
-        return false; // Informations de connexion invalides ou erreur survenue
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                // Erreur réseau ou autre
+                callback.onError("Login failed: " + t.getMessage());
+            }
+        });
+    }
+
+    // Interface de rappel pour gérer les résultats de la connexion
+    public interface LoginCallback {
+        void onSuccess(String token);
+        void onError(String errorMessage);
     }
 }
