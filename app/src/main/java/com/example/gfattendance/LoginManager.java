@@ -1,37 +1,37 @@
 package com.example.gfattendance;
 
-import android.content.Context;
-import android.widget.Toast;
-
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
 
 public class LoginManager {
-    private Context context;
     private ApiService apiService;
 
-    // Constructeur pour initialiser le contexte et Retrofit
-    public LoginManager(Context context) {
-        this.context = context;
+    public LoginManager(String baseUrl) {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .followRedirects(false) // Ajoutez cette ligne pour désactiver le suivi des redirections
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://127.0.0.1:8000/api")
+                .baseUrl(baseUrl)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         apiService = retrofit.create(ApiService.class);
     }
 
-    /**
-     * Méthode pour valider les informations de connexion
-     *
-     * @param email    L'email entré par l'utilisateur
-     * @param password Le mot de passe entré par l'utilisateur
-     */
-    public void validateLogin(String email, String password, LoginCallback callback) {
+    public void validateLogin(String email, String password, final LoginCallback callback) {
         LoginRequest loginRequest = new LoginRequest(email, password);
         Call<LoginResponse> call = apiService.login(loginRequest);
 
@@ -39,25 +39,45 @@ public class LoginManager {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Connexion réussie
                     callback.onSuccess(response.body().getToken());
                 } else {
-                    // Connexion échouée
                     callback.onError("Invalid email or password");
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                // Erreur réseau ou autre
                 callback.onError("Login failed: " + t.getMessage());
             }
         });
     }
 
-    // Interface de rappel pour gérer les résultats de la connexion
     public interface LoginCallback {
         void onSuccess(String token);
         void onError(String errorMessage);
+    }
+
+    public interface ApiService {
+        @POST("/login_check")
+        Call<LoginResponse> login(@Body LoginRequest loginRequest);
+    }
+
+    public static class LoginRequest {
+        private String username;
+        private String password;
+
+        public LoginRequest(String email, String password) {
+            this.password = password;
+            this.username = email;
+
+        }
+    }
+
+    public static class LoginResponse {
+        private String token;
+
+        public String getToken() {
+            return token;
+        }
     }
 }

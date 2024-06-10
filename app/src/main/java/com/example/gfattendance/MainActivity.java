@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonForgotPassword = findViewById(R.id.buttonForgotPassword);
 
-        loginManager = new LoginManager(this);
+        // Remplacez par l'adresse IP locale correcte de votre machine
+        loginManager = new LoginManager("https://192.168.0.28:8000/api/");
 
         buttonLogin.setOnClickListener(this);
         buttonForgotPassword.setOnClickListener(this);
