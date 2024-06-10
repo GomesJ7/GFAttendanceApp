@@ -227,7 +227,7 @@
             android:layout_width="64dp"
             android:layout_height="30dp"
             android:layout_marginStart="79dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:minHeight="48dp"
             android:text="@string/_05_35"

@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class MainActivity {
-    private Context context;
+    private final Context context;
     private JSONObject userData;
 
     public MainActivity(Context context) {
@@ -28,7 +28,7 @@ public class MainActivity {
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
             inputStream.close();
-            String json = new String(buffer, "UTF-8");
+            String json = new String(buffer, StandardCharsets.UTF_8);
             userData = new JSONObject(json);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
