@@ -1,83 +1,117 @@
 package com.example.gfattendance;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.POST;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
+// Cette classe gère le processus de connexion
 public class LoginManager {
-    private ApiService apiService;
+    private Context context;
 
-    public LoginManager(String baseUrl) {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .followRedirects(false) // Ajoutez cette ligne pour désactiver le suivi des redirections
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(ApiService.class);
+    // Constructeur de la classe
+    public LoginManager(Context context) {
+        this.context = context;
     }
 
-    public void validateLogin(String email, String password, final LoginCallback callback) {
-        LoginRequest loginRequest = new LoginRequest(email, password);
-        Call<LoginResponse> call = apiService.login(loginRequest);
+    // Cette méthode valide les informations de connexion
+    public void validateLogin(String email, String password, LoginCallback callback) {
+        new LoginTask(email, password, callback).execute();
+    }
 
-        call.enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body().getToken());
+    // Classe interne pour la tâche asynchrone de connexion
+    private static class LoginTask extends AsyncTask<Void, Void, String> {
+        private String email;
+        private String password;
+        private LoginCallback callback;
+
+        // Constructeur de la classe
+        LoginTask(String email, String password, LoginCallback callback) {
+            this.email = email;
+            this.password = password;
+            this.callback = callback;
+        }
+
+        // Cette méthode est exécutée en arrière-plan
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                // Création de l'URL et de la connexion
+                URL url = new URL("http://10.0.2.2:8000/api/login_check"); // Emulator
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+
+                // Création du JSON avec les informations de connexion
+                JSONObject json = new JSONObject();
+                json.put("username", email);
+                json.put("password", password);
+
+                // Envoi du JSON
+                Writer writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));
+                writer.write(json.toString());
+                writer.close();
+
+                // Récupération du code de réponse
+                int responseCode = connection.getResponseCode();
+                Log.d("LoginTask", "Response Code: " + responseCode); // Log the response code
+
+                // Si le code de réponse est OK, on lit la réponse
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    reader.close();
+                    Log.d("LoginTask", "Response: " + response.toString()); // Log response
+                    return response.toString();
                 } else {
-                    callback.onError("Invalid email or password");
+                    Log.e("LoginTask", "Error Response Code: " + responseCode);
+                    return null;
                 }
+            } catch (Exception e) { // En cas d'exception, on log l'erreur et on retourne null
+                Log.e("LoginTask", "Exception: " + e.getMessage());
+                e.printStackTrace();
+                return null;
             }
+        }
 
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                callback.onError("Login failed: " + t.getMessage());
+        // Cette méthode est appelée après l'exécution de la tâche en arrière-plan
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null) {
+                try { // On parse la réponse en JSON
+                    JSONObject jsonResponse = new JSONObject(result);
+                    if (jsonResponse.has("token")) {
+                        callback.onSuccess(jsonResponse.getString("token"));
+                    } else {
+                        callback.onError("Invalid response from server");
+                    }
+                } catch (JSONException e) {
+                    callback.onError("JSON parsing error");
+                }
+            } else {
+                callback.onError("Login failed");
             }
-        });
+        }
     }
 
+    // Interface pour le callback de la connexion
     public interface LoginCallback {
         void onSuccess(String token);
         void onError(String errorMessage);
-    }
-
-    public interface ApiService {
-        @POST("/login_check")
-        Call<LoginResponse> login(@Body LoginRequest loginRequest);
-    }
-
-    public static class LoginRequest {
-        private String username;
-        private String password;
-
-        public LoginRequest(String email, String password) {
-            this.password = password;
-            this.username = email;
-
-        }
-    }
-
-    public static class LoginResponse {
-        private String token;
-
-        public String getToken() {
-            return token;
-        }
     }
 }
